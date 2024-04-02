@@ -1,0 +1,1 @@
+https://diabetesriskprediction.streamlit.app/

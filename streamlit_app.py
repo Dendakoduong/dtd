@@ -29,18 +29,18 @@ translations = {
     "HighChol": "Do you have high cholesterol?",
     "BMI": "BMI",
     "Smoker": "Do you smoke?",#Have you smoked at least 100 cigarettes in your entire life? [Note: 5 packs = 100 cigarettes]
-    "Stroke": " Have you ever diagnosed with a Stroke ",
+    "Stroke": "(Ever told) (you had) a stroke?",
     "HeartDiseaseorAttack": "Have you ever been reported having coronary heart disease (CHD) or myocardial infarction (MI)",
-    "PhysActivity": "Have you engaged in any physical activity or exercise other than your regular job in the past 30 days?",
-    "Fruits": "Do you have the habit of eating fruit one or more times per day? (Do not include juices)",
-    "Veggies": "Do you have the habit of eating vegetables one or more times per day?",
-    "HvyAlcoholConsump": "Are you a heavy drinker? (adult men having more than 14 drinks per week and adult women having more than 7 drinks per week)",
+    "PhysActivity": "Have you doing physical activity or exercise during the past 30 days other than their regular job?",
+    "Fruits": "Eat 1 Fruit or more per day",
+    "Veggies": "Eat Veggies 1 or more per day",
+    "HvyAlcoholConsump": "Heavy drinkers (drinks <14 for men, <7 for women per week)",
     "GenHlth": "Would you say that in general your health is:",
     "MentHlth": "Now thinking about your mental health, which includes stress, depression, and problems with emotions, for how many days during the past 30 days was your mental health not good?",
     "PhysHlth": "Now thinking about your physical health, which includes physical illness and injury, for how many days during the past 30 days was your physical health not good?",
     "DiffWalk": "Do you have serious difficulty walking or climbing stairs? ",
     "Sex": "What is your gender?",
-    "Age": "Choose your age category",
+    "Age": "Age category",
 }
 
 # Define tips
@@ -122,17 +122,13 @@ def main():
         # When the user clicks the "Predict" button
         if st.button("Predict"):
             input_df = preprocess_input(input_dict)
-            prediction = model.predict(input_df)[0]
-            if prediction == 0:
-                result = 'Not at risk of diabetes'
-                st.success("Prediction Result: " + result)  # Green notification box
-                st.subheader("Tips to Reduce Diabetes Risk")
-                st.write(tips)
-            else:
-                result = 'At risk of diabetes'
-                st.error("Prediction Result: " + result)  # Red notification box
-                st.subheader("Tips to Reduce Diabetes Risk")
-                st.write(tips)
+            probabilities = model.predict_proba(input_df)[0]
+            not_diabetes_prob = probabilities[0] * 100
+            diabetes_prob = probabilities[1] * 100
+            st.success(f"Probability of not having diabetes: {not_diabetes_prob:.2f}%")
+            st.error(f"Probability of having diabetes: {diabetes_prob:.2f}%")
+            st.subheader("Tips to Reduce Diabetes Risk")
+            st.write(tips)
             
     elif add_selectbox == "Help":
         st.info("This app is used to predict the risk of diabetes based on several features. You need to enter the values for these features in the form, and then click 'Predict'.")

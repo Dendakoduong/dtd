@@ -29,8 +29,8 @@ translations = {
     "HighChol": "Do you have high cholesterol?",
     "BMI": "BMI",
     "Smoker": "Do you smoke?",#Have you smoked at least 100 cigarettes in your entire life? [Note: 5 packs = 100 cigarettes]
-    "Stroke": "Have you ever diagnosed with a Stroke",
-    "HeartDiseaseorAttack": "Have you ever been reported having coronary heart disease (CHD) or myocardial infarction (MI)",
+    "Stroke": "Have you ever diagnosed with a Stroke?",
+    "HeartDiseaseorAttack": "Have you ever been reported having coronary heart disease (CHD) or myocardial infarction (MI)?",
     "PhysActivity": "Have you engaged in any physical activity or exercise other than your regular job in the past 30 days?",
     "Fruits": "Do you have the habit of eating fruit one or more times per day? (Do not include juices)",
     "Veggies": "Do you have the habit of eating vegetables one or more times per day?",

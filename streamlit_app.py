@@ -34,7 +34,7 @@ translations = {
     "PhysActivity": "Have you engaged in any physical activity or exercise other than your regular job in the past 30 days?",
     "Fruits": "Do you have the habit of eating fruit one or more times per day? (Do not include juices)",
     "Veggies": "Do you have the habit of eating vegetables one or more times per day?",
-    "HvyAlcoholConsump": "Heavy drinkers (drinks <14 for men, <7 for women per week)",
+    "HvyAlcoholConsump": "Are you a heavy drinker? (adult men having more than 14 drinks per week and adult women having more than 7 drinks per week)",
     "GenHlth": "Would you say that in general your health is:",
     "MentHlth": "Now thinking about your mental health, which includes stress, depression, and problems with emotions, for how many days during the past 30 days was your mental health not good?",
     "PhysHlth": "Now thinking about your physical health, which includes physical illness and injury, for how many days during the past 30 days was your physical health not good?",

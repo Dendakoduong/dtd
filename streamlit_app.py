@@ -3,6 +3,7 @@ from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 import numpy as np
 import joblib
+import matplotlib.pyplot as plt
 
 # Load your model here
 model = joblib.load('logistic_regression_model.pkl')
@@ -23,8 +24,8 @@ def preprocess_input(input_data):
 
     return input_df
 
-# Translation dictionaries
-translations = {
+# Questions
+questions = {
     "HighBP": "Have you ever been told by a doctor, nurse or other health professional that you have high blood pressure?",
     "HighChol": "Do you have high cholesterol?",
     "BMI": "BMI",
@@ -38,7 +39,7 @@ translations = {
     "GenHlth": "Would you say that in general your health is:",
     "MentHlth": "Now thinking about your mental health, which includes stress, depression, and problems with emotions, for how many days during the past 30 days was your mental health not good?",
     "PhysHlth": "Now thinking about your physical health, which includes physical illness and injury, for how many days during the past 30 days was your physical health not good?",
-    "DiffWalk": "Do you have serious difficulty walking or climbing stairs? ",
+    "DiffWalk": "Do you have serious difficulty walking or climbing stairs?",
     "Sex": "What is your gender?",
     "Age": "Choose your age category",
 }
@@ -58,28 +59,28 @@ def main():
 
     if add_selectbox == "Predict":
         features = {
-            "HighBP": translations["HighBP"],
-            "HighChol": translations["HighChol"],
-            "BMI": translations["BMI"],
-            "Smoker": translations["Smoker"],
-            "Stroke": translations["Stroke"],
-            "HeartDiseaseorAttack": translations["HeartDiseaseorAttack"],
-            "PhysActivity": translations["PhysActivity"],
-            "Fruits": translations["Fruits"],
-            "Veggies": translations["Veggies"],
-            "HvyAlcoholConsump": translations["HvyAlcoholConsump"],
-            "GenHlth": translations["GenHlth"],
-            "MentHlth": translations["MentHlth"],
-            "PhysHlth": translations["PhysHlth"],
-            "DiffWalk": translations["DiffWalk"],
-            "Sex": translations["Sex"],
-            "Age": translations["Age"],
+            "HighBP": questions["HighBP"],
+            "HighChol": questions["HighChol"],
+            "BMI": questions["BMI"],
+            "Smoker": questions["Smoker"],
+            "Stroke": questions["Stroke"],
+            "HeartDiseaseorAttack": questions["HeartDiseaseorAttack"],
+            "PhysActivity": questions["PhysActivity"],
+            "Fruits": questions["Fruits"],
+            "Veggies": questions["Veggies"],
+            "HvyAlcoholConsump": questions["HvyAlcoholConsump"],
+            "GenHlth": questions["GenHlth"],
+            "MentHlth": questions["MentHlth"],
+            "PhysHlth": questions["PhysHlth"],
+            "DiffWalk": questions["DiffWalk"],
+            "Sex": questions["Sex"],
+            "Age": questions["Age"],
         }
         
         input_dict = {}
         for feature, description in features.items():
             if feature == "Sex":
-                input_dict[feature] = st.radio(translations["Sex"], ("Female", "Male"))
+                input_dict[feature] = st.radio(questions["Sex"], ("Female", "Male"))
                 input_dict[feature] = 1 if input_dict[feature] == "Male" else 0
             elif feature == "Age":
                 age_categories = {
@@ -97,7 +98,7 @@ def main():
                     "75-79": 12,
                     "80 or older": 13
                 }
-                selected_age_category = st.selectbox(translations["Age"], list(age_categories.keys()))
+                selected_age_category = st.selectbox(questions["Age"], list(age_categories.keys()))
                 input_dict[feature] = age_categories[selected_age_category]
             elif feature == "BMI":
                 height = st.number_input("Enter your height (m)", min_value=1.0, max_value=2.5, step=0.01)
@@ -111,7 +112,7 @@ def main():
                 "Very good": 4,
                 "Excellent": 5
                 }
-                selected_gen_hlth_category = st.selectbox(translations["GenHlth"], list(gen_hlth_categories.keys()))
+                selected_gen_hlth_category = st.selectbox(questions["GenHlth"], list(gen_hlth_categories.keys()))
                 input_dict[feature] = gen_hlth_categories[selected_gen_hlth_category]
             elif feature in ["MentHlth", "PhysHlth"]:
                 input_dict[feature] = st.slider(description, 0, 30)
@@ -125,8 +126,27 @@ def main():
             probabilities = model.predict_proba(input_df)[0]
             not_diabetes_prob = probabilities[0] * 100
             diabetes_prob = probabilities[1] * 100
-            st.success(f"Probability of not having diabetes: {not_diabetes_prob:.2f}%")
-            st.error(f"Probability of having diabetes: {diabetes_prob:.2f}%")
+
+            # Display a message
+            st.subheader("Result")
+            if diabetes_prob > not_diabetes_prob:
+                st.error(f"At risk of diabetes. Probability of having diabetes: {diabetes_prob:.2f}%")
+            else:
+                #st.success(f"Not at risk of diabetes. Probability of not having diabetes: {not_diabetes_prob:.2f}%")
+                diabetes_prob = 100 - not_diabetes_prob
+                st.success(f"Not at risk of diabetes. Probability of having diabetes: {diabetes_prob:.2f}%")
+
+            # Create a smaller and transparent pie chart
+            plt.figure(figsize=(3, 5), facecolor=(1, 1, 1, 0.5))
+            plt.pie([not_diabetes_prob, diabetes_prob], autopct='%1.1f%%')
+            plt.title('Diabetes Prediction Probabilities')
+
+            # Add a transparent legend to the right of the pie chart
+            plt.legend(['Not Diabetes', 'Diabetes'], bbox_to_anchor=(1, 0.5), loc='center left', framealpha=0.5)
+
+            # Display the pie chart
+            st.pyplot(plt.gcf())
+
             st.subheader("Tips to Reduce Diabetes Risk")
             st.write(tips)
             
